@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -37,6 +39,8 @@ jobs:
             git checkout develop
           
       - name: Create a new branch for cherry-pick
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
