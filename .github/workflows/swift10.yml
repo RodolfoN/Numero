@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Set up Git
         run: |
@@ -38,8 +39,6 @@ jobs:
             git checkout develop
           
       - name: Create a new branch for cherry-pick
-        with:
-         token: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
