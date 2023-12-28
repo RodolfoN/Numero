@@ -11,10 +11,16 @@ on:
 jobs:
   cherry-pick-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.WORKFLOW_SECRET }}
 
       - name: Set up Git
         run: |
@@ -24,22 +30,22 @@ jobs:
       - name: Get the last commit hash
         id: last_commit
         run: |
-         LAST_COMMIT_HASH=$(git rev-parse HEAD)
+         LAST_COMMIT_HASH=$(git rev-parse --short HEAD)
          echo "LAST_COMMIT_HASH=${LAST_COMMIT_HASH}" >> $GITHUB_ENV
          
       - name: Switch to develop branch
         run: |
             git fetch
             git checkout develop
+            git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           
       - name: Create a new branch for cherry-pick
         run: |
-          git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
           git push origin cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
+        
 
       - name: Open Pull Request
         run: |
           hub pull-request -b develop -h cherry-pick-branch_${{ env.LAST_COMMIT_HASH }} -m "Open Pull Request from main to develop (cherry-pick)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
