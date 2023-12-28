@@ -6,12 +6,13 @@ name: Cherry Pick and Open Pull Request
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   cherry-pick-pr:
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
       pull-requests: write
 
