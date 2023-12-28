@@ -93,9 +93,4 @@ class ConverterTests: XCTestCase {
     let result = converter.convert(3999)
     XCTAssertEqual(result, "MMMCMXCIL", "Conversion for 3999 is incorrect")
   }
-       
-    
-  
-    
-    
 }
