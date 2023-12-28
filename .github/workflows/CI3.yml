@@ -1,0 +1,49 @@
+# This workflow will build a Swift project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+
+name: Cherry-pick and Open Pull Request1
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cherry-pick:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        
+    - name: Get the last commit hash
+      id: last_commit
+      run: |
+        LAST_COMMIT_HASH=$(git rev-parse HEAD)
+        echo "LAST_COMMIT_HASH=${LAST_COMMIT_HASH}" >> $GITHUB_ENV
+
+    - name: Cherry-pick the last commit
+      run: |
+        git checkout -b cherry-pick-branch ${{ env.LAST_COMMIT_HASH }}
+        git cherry-pick ${{ env.LAST_COMMIT_HASH }}
+
+    - name: Push changes to main branch
+      run: |
+        git push origin cherry-pick-branch
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        commit-message: "Cherry-pick last commit to develop"
+        title: "Cherry-pick last commit to develop"
+        branch: cherry-pick-branch
+        base: develop
+        labels: "cherry-pick"
+
+    - name: Clean up
+      run: |
+        git checkout main
+        git branch -D cherry-pick-branch
+
