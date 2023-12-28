@@ -24,7 +24,7 @@ jobs:
       - name: Get the last commit hash
         id: last_commit
         run: |
-         LAST_COMMIT_HASH=$(git rev-parse HEAD)
+         LAST_COMMIT_HASH=$(git rev-parse --short HEAD)
          echo "LAST_COMMIT_HASH=${LAST_COMMIT_HASH}" >> $GITHUB_ENV
          
       - name: Switch to develop branch
