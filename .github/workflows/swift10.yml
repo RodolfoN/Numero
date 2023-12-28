@@ -28,7 +28,9 @@ jobs:
          echo "LAST_COMMIT_HASH=${LAST_COMMIT_HASH}" >> $GITHUB_ENV
          
       - name: Switch to develop branch
-        run: git checkout develop
+        run: |
+            git fetch
+            git checkout develop
           
       - name: Create a new branch for cherry-pick
         run: |
