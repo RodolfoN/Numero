@@ -20,8 +20,8 @@ jobs:
         
     - name: Set up Git
       run: |
-        git config user.email "your-email@example.com"
-        git config user.name "Your Name"
+        git config user.email "bot@email.com"
+        git config user.name "Sr Bot"
         
     - name: Get the last commit hash
       id: last_commit
@@ -31,24 +31,24 @@ jobs:
 
     - name: Cherry-pick the last commit
       run: |
-        git checkout -b cherry-pick-branch ${{ env.LAST_COMMIT_HASH }}
+        git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
         git cherry-pick ${{ env.LAST_COMMIT_HASH }}
 
     - name: Push changes to main branch
       run: |
-        git push origin cherry-pick-branch
+        git push origin cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
         commit-message: "Cherry-pick last commit to develop"
         title: "Cherry-pick last commit to develop"
-        branch: cherry-pick-branch
+        branch: cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
         base: develop
         labels: "cherry-pick"
 
     - name: Clean up
       run: |
         git checkout main
-        git branch -D cherry-pick-branch
+        git branch -D cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
 
