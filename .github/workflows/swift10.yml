@@ -37,10 +37,10 @@ jobs:
         run: |
             git fetch
             git checkout develop
+            git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           
       - name: Create a new branch for cherry-pick
         run: |
-          git checkout -b cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
           git push origin cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
         
