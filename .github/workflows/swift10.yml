@@ -42,10 +42,6 @@ jobs:
       - name: Create a new branch for cherry-pick
         run: |
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
-          git push origin cherry-pick-branch_${{ env.LAST_COMMIT_HASH }}
-        
-
-      - name: Open Pull Request
-        run: |
-          hub pull-request -b develop -h cherry-pick-branch_${{ env.LAST_COMMIT_HASH }} -m "Open Pull Request from main to develop (cherry-pick)"
+          gh pr create --base develop --head cherry-pick-branch_${{ env.LAST_COMMIT_HASH }} --title "The bug is fixed" --body "Everything works again"
+    
         
