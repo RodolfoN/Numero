@@ -44,5 +44,7 @@ jobs:
         run: |
           git cherry-pick ${{ env.LAST_COMMIT_HASH }}
           gh pr create --base develop --head cherry-pick-branch_${{ env.LAST_COMMIT_HASH }} --title "The bug is fixed" --body "Everything works again"
+      env:
+        GH_TOKEN: ${{ github.token }}
     
         
